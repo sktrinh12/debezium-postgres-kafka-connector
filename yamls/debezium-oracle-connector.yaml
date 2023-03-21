@@ -1,0 +1,34 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: debezium-connector-oracle
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: debezium-connect-cluster
+spec:
+  class: io.debezium.connector.oracle.OracleConnector
+  tasksMax: 1
+  config:
+    tasks.max: 1
+    topic.prefix: orcl_dm
+    database.user: ${secrets:kafka/debezium-orcl-secret:username}
+    database.password: ${secrets:kafka/debezium-orcl-secret:password}
+    database.hostname: dotoradb-2022-dev.fount
+    database.port: 1521
+    database.dbname: ora_dm
+    database.sid: orcl_dm
+    database.oracle.version: 19
+    database.connection.adapter: logminer
+    schema.history.internal.kafka.bootstrap.servers: kafka-cluster-kafka-bootstrap:9092
+    schema.history.internal.kafka.topic: oracle.schema-changes
+    schema.history.internal.store.only.captured.tables.ddl: true
+    schema.include.list: DS3_USERDATA
+    table.include.list: DS3_USERDATA.DISK_SPACE
+    include.schema.changes: true
+    errors.log.enable: true
+    snapshot.lock.timeout.ms: 5000
+    snapshot.mode: schema_only_recovery
+    decimal.handling.mode: double
+    lob.enabled: true
+    converters: toint
+    toint.type: com.kinnate.NumberToIntegerConverter

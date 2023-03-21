@@ -1,0 +1,26 @@
+{
+  "name": "oracle-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.oracle.OracleConnector",
+    "tasks.max": "1",
+    "topic.prefix": "orcl_dm",
+    "database.hostname": "dotoradb-2022-dev.fount",
+    "database.port": "1521",
+    "database.user": "dbzuser",
+    "database.password": "dbz",
+    "database.dbname": "ora_dm",
+    "database.sid": "orcl_dm",
+    "database.oracle.version": "19",
+    "schema.history.internal.kafka.bootstrap.servers": "kafka:9092",
+    "schema.history.internal.kafka.topic": "oracle.schema-changes",
+    "table.include.list": "DS3_USERDATA.DISK_SPACE",
+    "database.connection.adapter": "logminer",
+    "schema.history.internal.store.only.captured.tables.ddl": true,
+    "errors.log.enable": "true",
+    "snapshot.lock.timeout.ms": "5000",
+    "include.schema.changes": "true",
+    "snapshot.mode": "initial",
+    "decimal.handling.mode": "double",
+    "lob.enabled": "true"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "jdbc-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+    "topics": "orcl_dm.DS3_USERDATA.DISK_SPACE",
+    "connection.url": "jdbc:postgresql://postgres.kinnate:5432/postgres",
+    "connection.user": "postgres",
+    "connection.password": "kinnate",
+    "transforms": "unwrap",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones": "false",
+    "table.name.format": "DISK_SPACE",
+    "auto.create": "true",
+    "insert.mode": "upsert",
+    "delete.enabled": "false",
+    "dialect.name": "PostgreSqlDatabaseDialect",
+    "pk.fields": "ID",
+    "pk.mode": "record_key"
+  }
+}

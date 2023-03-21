@@ -1,0 +1,31 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: debezium-connect-cluster
+  namespace: kafka
+  annotations:
+    strimzi.io/use-connector-resources: 'true'
+spec:
+  version: 3.1.0
+  replicas: 1
+  image: 352353521492.dkr.ecr.us-west-2.amazonaws.com/debezium-connect-with-oracle-jdbc:latest
+  template:
+    pod:
+      imagePullSecrets:
+        - name: ecr-secret
+  bootstrapServers: kafka-cluster-kafka-bootstrap:9092
+  config:
+    config.providers: secrets
+    config.providers.secrets.class: io.strimzi.kafka.KubernetesSecretConfigProvider
+    group.id: connect-cluster
+    offset.storage.topic: connect-cluster-offsets
+    config.storage.topic: connect-cluster-configs
+    status.storage.topic: connect-cluster-status
+    # -1 means it will use the default replication factor configured in the broker
+    config.storage.replication.factor: -1
+    offset.storage.replication.factor: -1
+    status.storage.replication.factor: -1
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: true
+    value.converter.schemas.enable: true

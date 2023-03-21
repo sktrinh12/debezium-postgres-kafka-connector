@@ -1,0 +1,25 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: debezium-connector-postgres
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: debezium-connect-cluster
+spec:
+  class: io.confluent.connect.jdbc.JdbcSinkConnector
+  tasksMax: 1
+  config:
+    dialect.name: PostgreSqlDatabaseDialect
+    table.name.format: DISK_SPACE
+    topics: orcl_dm.DS3_USERDATA.DISK_SPACE
+    connection.url: jdbc:postgresql://postgres.kinnate:5432/postgres
+    connection.user: ${secrets:kafka/debezium-pg-secret:username}
+    connection.password: ${secrets:kafka/debezium-pg-secret:password}
+    transforms: unwrap
+    transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
+    transforms.unwrap.drop.tombstones: false
+    auto.create: true
+    insert.mode: upsert
+    delete.enabled: true
+    pk.fields: ID
+    pk.mode: record_key
